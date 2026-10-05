@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import EmployeeNav from "../../../components/EmployeeNav";
 import {useState} from "react";
 const checks=["Greet every table promptly","Introduce yourself and Roberto's","Present menus and answer initial questions","Take drink orders immediately","Return with drinks and take food orders","Check back within 2 minutes after food delivery","Anticipate needs and keep the table comfortable"];
 export default function Lesson(){
@@ -9,7 +10,7 @@ export default function Lesson(){
  const [complete,setComplete]=useState(false);
  const correct=answer==="B";
  const all=done.every(Boolean);
- return <div className="learner"><header className="editornav"><div className="brand"><span>ROBERTO'S</span> TRAINING</div><nav><Link href="/">Dashboard</Link><Link href="/courses/server">My Training</Link></nav><div className="navright">East Windsor <b className="avatar">NB</b> Nathan⌄</div></header>
+ return <div className="learner"><EmployeeNav/>
  <div className="learnprogress"><i style={{width:complete?"100%":"50%"}}/></div>
  <main className="learnpage"><div className="learncrumb"><Link href="/courses/server">‹ Server Training</Link><span>Lesson 6 of 12</span></div>
  <section className="lessonmast"><div><span className="pill">SERVER TRAINING</span><h1>Steps of Service</h1><p>Learn the step-by-step process for providing excellent service at Roberto’s, from greeting the guest to closing the check.</p><div className="lessonmeta">◷ 10 minutes　•　▤ Required lesson</div></div><div className="lessonnumber">06</div></section>
