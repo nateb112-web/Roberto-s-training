@@ -2,7 +2,7 @@
 import Link from "next/link";
 import {useEffect,useState} from "react";
 
-type Attempt={number:number;score:number;passed:boolean;date:string};
+type Attempt={number:number;score:number;passed:boolean;date:string;answers?:number[]};
 const questions=[
  {q:"When should you perform your first check-back after food is delivered?",a:["Immediately","Within about 2 minutes / 2 bites","After 10 minutes","Only if called over"],correct:1},
  {q:"What is the primary goal of the Steps of Service?",a:["Move tables as fast as possible","Create a consistent guest experience","Avoid talking to guests","Sell only specials"],correct:1},
@@ -23,7 +23,7 @@ export default function FinalExam(){
    if(answers.some(a=>a<0))return;
    const correct=questions.filter((q,i)=>answers[i]===q.correct).length;
    const score=Math.round(correct/questions.length*100), passed=score>=80;
-   const next=[...attempts,{number:attempts.length+1,score,passed,date:new Date().toLocaleDateString()}];
+   const next=[...attempts,{number:attempts.length+1,score,passed,date:new Date().toLocaleDateString(),answers:[...answers]}];
    setAttempts(next);setLastScore(score);setSubmitted(true);
    const shouldLock=!passed; setLocked(shouldLock); setRetestState("none"); persist(next,shouldLock,"none");
  }
