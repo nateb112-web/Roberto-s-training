@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function EmployeeNav(){return <header className="top employeenav"><Link className="brand navbrand" href="/"><span>ROBERTO'S</span> TRAINING</Link><nav><Link href="/">Home</Link><Link href="/courses/server">My Training</Link><Link href="/study">Study Materials</Link><Link href="/progress">Progress</Link></nav><div className="user">East Windsor • Employee Portal</div></header>}
