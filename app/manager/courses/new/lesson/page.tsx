@@ -26,4 +26,5 @@ export default function LessonEditor(){
  </section>
  <aside className="panel employeepreview"><div className="previewhead"><div><div className="eyebrow">EMPLOYEE PREVIEW</div><p>This is how the lesson will appear to employees.</p></div><div className="devices"><button>▣</button><button>▭</button><button>▯</button></div></div><div className="previewbanner"><div><h2>{title}</h2><span>◷ {minutes} minutes　▤ 1 of 1 lessons</span></div><button>Start Lesson</button></div>
  {blocks.map(b=><div className="employeecontent" key={b.id}><span className={"typeicon t"+b.type.replace(/\W/g,"")}>{meta[b.type].icon}</span><div><h3>{b.title}</h3>{b.type==="Checklist"?<div className="checkpreview">{b.content.split("\n").filter(Boolean).map(x=><label key={x}><input type="checkbox"/>{x}</label>)}</div>:b.type==="Video"?<div className="videopreview"><div className="videologo">ROBERTO'S<small>AMERICAN TAVERN</small></div><b>▶</b><div className="videobar"/></div>:<p>{b.content}</p>}</div></div>)}
- </aside></div>{saved&&<div className="toast">✓ {saved}</div>}</main></div>\n }
+ </aside></div>{saved&&<div className="toast">✓ {saved}</div>}</main></div>
+ }
