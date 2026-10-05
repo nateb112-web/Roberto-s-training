@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import EmployeeNav from "../../../components/EmployeeNav";
 import {useEffect,useState} from "react";
 
 type Attempt={number:number;score:number;passed:boolean;date:string;answers?:number[]};
@@ -33,7 +34,7 @@ export default function FinalExam(){
    setLocked(false);setSubmitted(false);setLastScore(null);setAnswers(questions.map(()=>-1));setRetestState("none");persist(attempts,false,"none");
  }
  const passed=lastScore!==null&&lastScore>=80;
- return <div className="learner"><header className="editornav"><div className="brand"><span>ROBERTO'S</span> TRAINING</div><nav><Link href="/">Dashboard</Link><Link href="/courses/server">My Training</Link></nav><div className="navright">East Windsor <b className="avatar">NB</b> Nathan⌄</div></header>
+ return <div className="learner"><EmployeeNav/>
  <main className="examwrap"><div className="learncrumb"><Link href="/courses/server">‹ Server Training</Link><span>Final Exam</span></div>
  <div className="examhead"><div><span className="pill">SERVER TRAINING</span><h1>Final Server Exam</h1><p>Passing score: 80%. Failed attempts require a manager-released retest.</p></div><div className="attemptbadge">ATTEMPT <b>{attempts.length+(locked?0:1)}</b></div></div>
  {locked?<section className="resultcard failedresult"><div className="resultmark">✕</div><div><div className="eyebrow">FINAL SERVER EXAM</div><h2>Not Passed</h2><div className="bigscore">{attempts.at(-1)?.score}%</div><p>A passing score of 80% is required. Attempt {attempts.at(-1)?.number} has been recorded.</p></div><div className="resultactions">{retestState==="released"?<button onClick={beginRetest}>Begin Retest</button>:retestState==="requested"?<button disabled>Retest Requested</button>:retestState==="approval"?<button disabled>Waiting for Manager Approval</button>:<button onClick={requestRetest}>Request Retest</button>}<Link className="btn linkbtn outline" href="/courses/server">Return to Course</Link></div></section>:
