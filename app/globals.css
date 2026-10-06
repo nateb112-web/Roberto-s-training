@@ -31,3 +31,12 @@ body{background:#f2f5f7;color:#1f2b35}
 .pageintro,.hero,.studytitlebar{position:relative}
 .pageintro:after,.hero:after,.studytitlebar:after{content:"";position:absolute;left:0;right:0;bottom:-12px;height:1px;background:#dfe5e9}
 .resourcefilters button,.practiceanswers button,.itemtools button,.visualtools button{box-shadow:0 1px 2px rgba(13,27,38,.035)}
+
+/* Home depth pass — layout intentionally unchanged */
+.learner{background:linear-gradient(180deg,#e8eef2 0,#f1f4f6 360px,#edf1f4 100%)}
+.stats .card{border-top:3px solid #142736;box-shadow:0 6px 18px rgba(13,27,38,.075)}
+.stats .card:first-child{border-top-color:#b71922}
+.traininggrid>.card,.dashboardgrid>.card{box-shadow:0 7px 22px rgba(13,27,38,.075);border:1px solid #d9e1e6}
+.traininggrid>.card h2,.dashboardgrid>.card h2{color:#142736}
+.managercard,.manager-tools{background:linear-gradient(145deg,#101f2a,#1c2932)!important;border:1px solid #263944!important;box-shadow:0 8px 24px rgba(13,27,38,.18)!important}
+.progressbar,.bar{background:#e5e9ec}
