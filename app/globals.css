@@ -40,3 +40,5 @@ body{background:#f2f5f7;color:#1f2b35}
 .traininggrid>.card h2,.dashboardgrid>.card h2{color:#142736}
 .managercard,.manager-tools{background:linear-gradient(145deg,#101f2a,#1c2932)!important;border:1px solid #263944!important;box-shadow:0 8px 24px rgba(13,27,38,.18)!important}
 .progressbar,.bar{background:#e5e9ec}
+
+.employeeFlashImage{width:min(360px,75%);height:180px;object-fit:cover;border-radius:12px;margin:0 auto 18px;box-shadow:0 5px 18px rgba(13,27,38,.12)}
