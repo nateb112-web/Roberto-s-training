@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 const TO="robertostavern@gmail.com";
-const FROM=process.env.LINE_CHECK_FROM_EMAIL||"Roberto's Training <onboarding@resend.dev>";
+const FROM=process.env.LINE_CHECK_FROM_EMAIL||"Roberto's Line Checks <linechecks@robertosct.com>";
 const esc=(v:any)=>String(v??"").replace(/[&<>"]/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]||c));
 export async function POST(req:Request){
  try{
