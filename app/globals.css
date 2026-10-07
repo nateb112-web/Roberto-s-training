@@ -62,3 +62,44 @@ body{background:#f2f5f7;color:#1f2b35}
 .emaildelivery{margin:18px auto 6px;padding:11px 14px;border-radius:9px;background:#edf8f0;color:#17733b;max-width:520px;font-size:13px}.emaildelivery.emailfailed{background:#fff0f0;color:#b71922}
 
 .reportemailstatus{margin-top:10px;font-size:13px;font-weight:700;color:#17733b}.reportemailstatus.reportemailfailed{color:#b71922}
+
+/* Phone-first line check */
+@media(max-width:620px){
+ .learner:has(.linewrap) .studyvisualnav{min-height:58px;padding:8px 12px;gap:8px}
+ .learner:has(.linewrap) .studyvisualnav .scriptbrand{font-size:20px}
+ .learner:has(.linewrap) .studyvisualnav nav{display:none}
+ .learner:has(.linewrap) .navavatar{padding:7px 9px;font-size:11px}
+ .linewrap{padding:10px 8px 110px}
+ .linewrap .linehero{padding:14px;border-radius:12px;margin-bottom:10px}
+ .linewrap .linehero h1{font-size:25px}
+ .linewrap .linehero p{font-size:12px;line-height:1.4}
+ .lineheroactions{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:6px;margin-top:12px}
+ .linewrap .linehero .editlink{padding:9px 5px;font-size:10px}
+ .lineinfo{grid-template-columns:1fr 1fr;gap:9px;padding:10px;margin:0 0 10px}
+ .lineinfo label{grid-column:1/-1}
+ .lineinfo div:last-child{grid-column:1/-1}
+ .lineinfo input{height:42px;font-size:16px}
+ .linestation.stationcard{margin:9px 0;padding:0 10px 8px;border-radius:11px}
+ .stationcard .stationhead{margin:0 -10px 2px;padding:10px}
+ .stationidentity{gap:8px}
+ .stationnumber{width:27px;height:27px}
+ .stationidentity h2{font-size:14px;line-height:1.15}
+ .stationidentity small{font-size:10px}
+ .stationprogress b{font-size:10px}
+ .dynamiclineitem{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:7px;padding:9px 0}
+ .itemfield input,.linenote input{height:44px;padding:9px;font-size:16px}
+ .tempfield input{height:44px;font-size:20px;padding:6px}
+ .tempfield b{height:44px;padding:14px 7px}
+ .dynamiclineitem .linenote{grid-column:1/-1}
+ .dynamictools{grid-column:1/-1;min-height:0}
+ .dynamictools .tempstatus{flex:0 0 auto;padding:6px 10px}
+ .dynamictools .danger{margin-left:auto;min-width:40px;min-height:40px}
+ .addextra{min-height:42px;padding:8px 2px;font-size:12px}
+ .overallnotes{padding:12px;margin-top:10px}
+ .overallnotes textarea{min-height:78px;font-size:16px}
+ .dangerbanner{font-size:12px;margin:10px 0}
+ .signoffbar{position:fixed;left:8px;right:8px;bottom:8px;margin:0;padding:9px 10px;z-index:20;display:grid;grid-template-columns:1fr auto;gap:8px}
+ .signoffbar>div>span{display:none}
+ .signoffbar button{width:auto;margin:0;padding:11px 12px;font-size:11px;white-space:nowrap}
+ .linecaveat{display:none}
+}
