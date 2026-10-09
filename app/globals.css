@@ -127,3 +127,5 @@ body{background:#f2f5f7;color:#1f2b35}
 /* Keep inactive language option legible on dark line-check header */
 .linehero .inlinelanguage button:not(.active){background:#ffffff;color:#142c3b;border-color:#d3dce3;opacity:1}
 .linehero .inlinelanguage button.active{background:#0d1b26;color:#fff;border:1px solid #a9c0cf;opacity:1}
+
+.validationpanel{padding:22px;margin:18px 0}.validationtitle{display:flex;align-items:center;justify-content:space-between;gap:12px}.validationtitle h2{margin:0}.validationtitle p{color:#586674}.validationmanager,.validationitem label{display:grid;gap:7px;font-weight:700}.validationmanager input,.validationitem input,.validationitem textarea{width:100%;padding:11px;border:1px solid #cbd5dc;border-radius:8px;font:inherit}.validationitem{display:grid;gap:10px;border-top:1px solid #dce3e8;padding:16px 0}.validationitem small{color:#217245}.validationitem textarea{min-height:75px}.validationrecord{background:#eaf7ee;border-left:3px solid #247746;padding:9px 12px;grid-column:1/-1;color:#214b32}@media(max-width:620px){.validationtitle{align-items:stretch;flex-direction:column}}
