@@ -123,3 +123,7 @@ body{background:#f2f5f7;color:#1f2b35}
 .languagechoice{margin:55px auto;padding:30px;text-align:center;max-width:560px}.languagechoice h1{margin:12px 0}.languagechoice p{color:#66737d}.languagebuttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}.languagebuttons button{min-height:64px;font-size:19px;font-weight:800}@media(max-width:620px){.languagechoice{margin:25px 8px;padding:20px}.languagebuttons{grid-template-columns:1fr}}
 
 .inlinelanguage{display:flex;gap:6px;margin:9px 0}.inlinelanguage button{background:transparent;border:1px solid #c9d2d8;border-radius:7px;padding:7px 12px;color:#243743}.inlinelanguage button.active{background:#0d1b26;color:#fff}.leaveoverlay{position:fixed;inset:0;z-index:200;background:#07121cb5;display:grid;place-items:center;padding:15px}.leavedialog{max-width:480px;width:100%;padding:24px}.leavedialog p{margin:12px 0;color:#55636e}.leavebuttons{display:flex;flex-wrap:wrap;gap:8px}.leavebuttons button{padding:11px;border-radius:8px}@media(max-width:620px){.leavebuttons{display:grid}.leavebuttons button{width:100%}}
+
+/* Keep inactive language option legible on dark line-check header */
+.linehero .inlinelanguage button:not(.active){background:#ffffff;color:#142c3b;border-color:#d3dce3;opacity:1}
+.linehero .inlinelanguage button.active{background:#0d1b26;color:#fff;border:1px solid #a9c0cf;opacity:1}
