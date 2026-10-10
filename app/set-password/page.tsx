@@ -1,0 +1,11 @@
+"use client";
+import {useEffect,useState} from "react";
+import Link from "next/link";
+const base="https://xtuhannfnvsvvahrzyxj.supabase.co/auth/v1/";
+const key="sb_publishable_IygQd5vrXido1h8FMRjuaA_QrNzgFEC";
+export default function SetPassword(){
+ const [token,setToken]=useState(""),[password,setPassword]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false);
+ useEffect(()=>{async function init(){const hash=new URLSearchParams(window.location.hash.slice(1));const access=hash.get("access_token");if(access){setToken(access);return}const params=new URLSearchParams(window.location.search);const hashToken=params.get("token_hash");if(hashToken){const r=await fetch(base+"verify",{method:"POST",headers:{apikey:key,"Content-Type":"application/json"},body:JSON.stringify({token_hash:hashToken,type:"invite"})});const data=await r.json();if(data.access_token)setToken(data.access_token);else setMessage("Invitation could not be verified. Request a new invitation.");return}setMessage("Open the invitation link from your email to set a password.")}init()},[]);
+ async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);try{const r=await fetch(base+"user",{method:"PUT",headers:{apikey:key,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify({password})});const data=await r.json();if(!r.ok)throw Error(data.msg||data.message||"Unable to set password");setMessage("Password saved. You can now sign in.");setToken("")}catch(e){setMessage(e instanceof Error?e.message:"Unable to save")}finally{setBusy(false)}}
+ return <main className="wrap" style={{maxWidth:520,paddingTop:65}}><section className="card" style={{padding:32}}><h1>Welcome to Roberto's</h1><p>Set your employee account password to get started.</p>{token&&<form onSubmit={submit} style={{display:"grid",gap:16}}><label>New password<input type="password" minLength={8} required value={password} onChange={e=>setPassword(e.target.value)} style={{display:"block",width:"100%",padding:12,marginTop:8}}/></label><button disabled={busy} type="submit">{busy?"Saving…":"Set Password"}</button></form>}{message&&<p role="status">{message}</p>}<Link href="/login">Go to Sign In →</Link></section></main>
+}
