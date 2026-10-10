@@ -1,0 +1,23 @@
+@media print {
+ @page { size: letter portrait; margin: 0.35in; }
+ body { background:#fff!important;color:#111!important;font-size:9px!important; }
+ .studyvisualnav,.backlink,.actions,.validationpanel,.reportemailstatus { display:none!important; }
+ .learner,.wrap.linewrap { background:#fff!important;max-width:none!important;width:100%!important;margin:0!important;padding:0!important; }
+ .reporthead { display:flex!important;align-items:center!important;justify-content:space-between!important;margin:0 0 5px!important;padding:0!important; }
+ .reporthead h1 {font-size:16px!important;margin:0!important}
+ .reporthead p {font-size:9px!important;margin:2px 0!important}
+ .reportbadge {font-size:9px!important;padding:4px 8px!important}
+ .linestation {break-inside:avoid!important;page-break-inside:avoid!important;margin:3px 0!important;padding:3px 5px!important;border:1px solid #aaa!important;border-radius:0!important;box-shadow:none!important}
+ .stationhead {margin:0!important;padding:0!important;min-height:0!important}
+ .stationhead h2 {font-size:10px!important;margin:0 0 2px!important;padding:0!important}
+ .reportitem {display:grid!important;grid-template-columns:2fr 65px 80px 2fr!important;align-items:start!important;gap:3px!important;padding:2px 0!important;margin:0!important;border-top:1px solid #ddd!important}
+ .reportitem strong,.reportitem small,.reportitem b,.reportitem span,.reportitem p {font-size:8px!important;margin:0!important;padding:0!important;line-height:1.2!important}
+ .reportitem small {display:block!important}
+ .reportitem .validationrecord {grid-column:1/-1!important}
+ .reportnotes {margin:4px 0!important;padding:5px!important;border:1px solid #aaa!important;box-shadow:none!important;break-inside:avoid!important}
+ .reportnotes b,.reportnotes p,.reportcheck * {font-size:8px!important;line-height:1.2!important}
+ .simplechecks {display:grid!important;grid-template-columns:1fr 1fr!important;gap:2px!important}
+ .simplecheck {margin:0!important;padding:2px!important;break-inside:avoid!important}
+ .simplecheck .checkcopy small {display:none!important}
+ .simplecheck.no .checkcopy small {display:block!important}
+}
