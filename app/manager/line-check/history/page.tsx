@@ -1,8 +1,8 @@
 "use client";
-import Link from "next/link";import {useEffect,useMemo,useState} from "react";
+import Link from "next/link";import {syncReports,localReports} from "../reportSync";import {useEffect,useMemo,useState} from "react";
 type Report={id:number;date:string;manager:string;entries:any[];notes:string;alert:boolean};
-export default function History(){const [reports,setReports]=useState<Report[]>([]),[month,setMonth]=useState("all");
-useEffect(()=>{try{setReports(JSON.parse(localStorage.getItem("robertos-line-check-reports")||"[]"))}catch{}},[]);
+export default function History(){const [reports,setReports]=useState<Report[]>([]),[month,setMonth]=useState("all"),[syncStatus,setSyncStatus]=useState("Loading shared reports…");
+useEffect(()=>{let active=true;setReports(localReports());syncReports().then(all=>{if(active){setReports(all);setSyncStatus("✓ Reports synced across devices")}}).catch(()=>{if(active)setSyncStatus("Could not sync reports. Showing reports saved on this device.")});return()=>{active=false}},[]);
 const months=useMemo(()=>[...new Set(reports.map(r=>new Date(r.date).toLocaleDateString("en-US",{year:"numeric",month:"long"})))],[reports]);
 const shown=reports.filter(r=>month==="all"||new Date(r.date).toLocaleDateString("en-US",{year:"numeric",month:"long"})===month);
 const grouped=months.map(m=>({month:m,items:shown.filter(r=>new Date(r.date).toLocaleDateString("en-US",{year:"numeric",month:"long"})===m)})).filter(g=>g.items.length);
