@@ -1,0 +1,11 @@
+"use client";
+import {useEffect,useState} from "react";
+import Link from "next/link";
+const base="https://xtuhannfnvsvvahrzyxj.supabase.co";
+const key="sb_publishable_IygQd5vrXido1h8FMRjuaA_QrNzgFEC";
+type Profile={user_id:string;email:string;display_name:string;access_role:string;staff_position:string|null;staff_department:string|null};
+export default function Account(){
+ const [profile,setProfile]=useState<Profile|null>(null),[message,setMessage]=useState("Loading account…"),[loading,setLoading]=useState(true);
+ useEffect(()=>{async function load(){try{const raw=sessionStorage.getItem("robertos_auth");if(!raw){setMessage("Please sign in to view your account.");return;}const session=JSON.parse(raw);const me=await fetch(base+"/auth/v1/user",{headers:{apikey:key,Authorization:"Bearer "+session.access_token}});if(!me.ok)throw Error("Your session has expired. Please sign in again.");const user=await me.json();const res=await fetch(base+"/rest/v1/staff_profiles?user_id=eq."+encodeURIComponent(user.id)+"&select=user_id,email,display_name,access_role,staff_position,staff_department",{headers:{apikey:key,Authorization:"Bearer "+session.access_token}});if(!res.ok)throw Error("Unable to load your staff profile.");const profiles=await res.json();if(!profiles.length){setMessage("Your account is verified but has not been assigned a staff role. Contact an administrator.");return;}setProfile(profiles[0]);setMessage("");}catch(e){setMessage(e instanceof Error?e.message:"Unable to load account")}finally{setLoading(false)}}load()},[]);
+ return <main className="wrap" style={{maxWidth:720,paddingTop:48}}><section className="card" style={{padding:28}}><Link href="/">← Roberto's Training</Link><h1>My Account</h1>{loading?<p>Loading…</p>:profile?<><h2>{profile.display_name||profile.email}</h2><p>{profile.email}</p><p><strong>Access:</strong> {profile.access_role.toUpperCase()}</p><p><strong>Position:</strong> {profile.staff_position||"Not assigned"}</p>{["admin","manager"].includes(profile.access_role)&&<Link className="btn linkbtn" href="/manager">Manager Dashboard →</Link>}{profile.access_role==="admin"&&<p>Administrator access verified. Employee management and route protection are being connected next.</p>}</>:<p role="status">{message}</p>}<div style={{marginTop:20}}><Link href="/login">Sign in again</Link></div></section></main>;
+}
