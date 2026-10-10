@@ -8,7 +8,7 @@ export default function Login(){
  async function submit(e:React.FormEvent<HTMLFormElement>){
   e.preventDefault();setBusy(true);setMessage("");
   try{
-   const response=await fetch(endpoint+(forgot?"recover":register?"signup":"token?grant_type=password"),{method:"POST",headers:{"Content-Type":"application/json",apikey:apiKey},body:JSON.stringify(forgot?{email}:{email,password})});
+   const response=await fetch(endpoint+(forgot?"recover?redirect_to="+encodeURIComponent("https://robertos-training.vercel.app/set-password"):register?"signup":"token?grant_type=password"),{method:"POST",headers:{"Content-Type":"application/json",apikey:apiKey},body:JSON.stringify(forgot?{email}:{email,password})});
    const result=await response.json();
    if(!response.ok)throw new Error(result.msg||result.error_description||result.message||"Sign-in failed");
    if(forgot)setMessage("If this email has an account, a password setup link has been sent. Please check your inbox and spam folder.");else if(register)setMessage("Check your email for a verification link. Then return here to sign in.");
