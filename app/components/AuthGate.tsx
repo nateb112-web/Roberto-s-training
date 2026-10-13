@@ -12,10 +12,10 @@ export default function AuthGate({children}:{children:React.ReactNode}){
   try{
    const raw=sessionStorage.getItem("robertos_auth");
    if(!raw)throw Error("not signed in");
-   const token=JSON.parse(raw).access_token;
+   let session=JSON.parse(raw);let token=session.access_token;const refresh=async()=>{if(!session.refresh_token)return false;const response=await fetch(base+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:key,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:session.refresh_token})});if(!response.ok)return false;session=await response.json();token=session.access_token;sessionStorage.setItem("robertos_auth",JSON.stringify(session));return true};if(session.expires_at&&Date.now()/1000>session.expires_at-120)await refresh();
    if(!token)throw Error("missing token");
-   const headers={apikey:key,Authorization:"Bearer "+token};
-   const me=await fetch(base+"/auth/v1/user",{headers,cache:"no-store"});
+   let headers={apikey:key,Authorization:"Bearer "+token};
+   let me=await fetch(base+"/auth/v1/user",{headers,cache:"no-store"});if(me.status===401&&await refresh()){headers={apikey:key,Authorization:"Bearer "+token};me=await fetch(base+"/auth/v1/user",{headers,cache:"no-store"})}
    if(!me.ok)throw Error("expired session");
    const user=await me.json();
    const response=await fetch(base+"/rest/v1/staff_profiles?user_id=eq."+encodeURIComponent(user.id)+"&select=access_role,display_name",{headers,cache:"no-store"});
