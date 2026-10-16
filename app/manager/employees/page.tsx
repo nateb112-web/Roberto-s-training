@@ -4,7 +4,7 @@ import Link from "next/link";
 const base="https://xtuhannfnvsvvahrzyxj.supabase.co";
 const apiKey="sb_publishable_IygQd5vrXido1h8FMRjuaA_QrNzgFEC";
 type Person={user_id:string;email:string;display_name:string;access_role:string;staff_position:string|null;staff_positions:string[]};
-const positions=[["","Not assigned"],["server","Server"],["bartender","Bartender"],["kitchen","Kitchen"],["hot","Hot"],["host","Host (Support Staff)"],["busser","Busser (Support Staff)"]];
+const positions=[["","Not assigned"],["server","Server"],["bartender","Bartender"],["kitchen","Kitchen"],["host","Host (Support Staff)"],["busser","Busser (Support Staff)"]];
 export default function Employees(){
  const [inviteOpen,setInviteOpen]=useState(false),[inviteEmail,setInviteEmail]=useState(""),[inviteName,setInviteName]=useState(""),[invitePosition,setInvitePosition]=useState<string[]>(["server"]),[inviteRole,setInviteRole]=useState("staff"),[inviteBusy,setInviteBusy]=useState(false),[inviteMessage,setInviteMessage]=useState("");const [people,setPeople]=useState<Person[]>([]),[owner,setOwner]=useState(false),[deleting,setDeleting]=useState(""),[token,setToken]=useState(""),[error,setError]=useState(""),[loading,setLoading]=useState(true),[saving,setSaving]=useState("");
  async function load(t:string){const response=await fetch(base+"/rest/v1/staff_profiles?select=user_id,email,display_name,access_role,staff_position,staff_positions&order=display_name.asc",{headers:{apikey:apiKey,Authorization:"Bearer "+t}});if(!response.ok)throw Error("Unable to load employees ("+response.status+").");setPeople(await response.json())}
