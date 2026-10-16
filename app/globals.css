@@ -133,3 +133,33 @@ body{background:#f2f5f7;color:#1f2b35}
 .productconfig{display:grid;gap:6px;padding:10px;border:1px solid #dce4e9;border-radius:8px;background:#f8fafb}.productconfig label{font-size:12px;font-weight:800;color:#354754}.productconfig textarea{width:100%;min-height:100px;border:1px solid #ccd5db;border-radius:8px;padding:9px;font:inherit;font-size:14px;resize:vertical}.productconfig small{color:#647581;font-size:11px}.dynamiclineitem .itemfield select{width:100%;min-height:39px;border:1px solid #ccd5db;border-radius:7px;background:#fff;color:#253744;padding:8px;font:inherit}
 
 .stationtoggle{display:block;margin-top:5px;padding:5px 8px;background:#fff;border:1px solid #a9c9b6;border-radius:7px;color:#176a3a;font-weight:800;font-size:12px;cursor:pointer}.stationtoggle:hover{background:#e8f5ec}.stationdone .stationtoggle:focus-visible{outline:3px solid #3184b5;outline-offset:2px}
+
+/* End of Day: touch-friendly responsive layout, scoped to EOD only */
+.eod-mobile{min-width:0}
+.eod-mobile .card{min-width:0;max-width:100%}
+.eod-mobile input,.eod-mobile select,.eod-mobile button{font:inherit}
+.eod-mobile input[type="checkbox"],.eod-mobile input[type="radio"]{width:19px;height:19px;vertical-align:middle;accent-color:#b71922;margin-right:7px}
+.eod-mobile button,.eod-mobile .outline{min-height:42px}
+.eod-mobile input[type="number"],.eod-mobile input[type="date"],.eod-mobile select{min-height:44px;max-width:100%;box-sizing:border-box}
+.eod-mobile .eod-tipout-row{min-width:0}
+.eod-mobile .eod-tipout-row>*{min-width:0}
+@media(max-width:680px){
+.eod-mobile{padding:12px 10px 100px!important;width:100%;box-sizing:border-box}
+.eod-mobile>header{padding:18px!important;margin:14px 0!important}
+.eod-mobile>header h1{font-size:1.65rem}
+.eod-mobile .card{padding:16px!important;margin-bottom:12px!important;border-radius:12px}
+.eod-mobile .card h2{font-size:1.25rem}
+.eod-mobile .card h3{font-size:1.12rem}
+.eod-mobile .card p{overflow-wrap:anywhere;line-height:1.5}
+.eod-mobile .card>div{max-width:100%}
+.eod-mobile .eod-tipout-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:9px!important;padding:12px;border:1px solid #dce3ea;border-radius:10px;background:#f8fafc}
+.eod-mobile .eod-tipout-row select:first-child{grid-column:1/-1}
+.eod-mobile .eod-tipout-row select:nth-child(2){grid-column:1/-1}
+.eod-mobile .eod-tipout-row input{grid-column:1}
+.eod-mobile .eod-tipout-row button{grid-column:2;min-height:44px}
+.eod-mobile input[type="number"],.eod-mobile input[type="date"],.eod-mobile select{font-size:16px!important}
+.eod-mobile input[type="checkbox"],.eod-mobile input[type="radio"]{width:22px;height:22px}
+.eod-mobile label{line-height:1.6}
+.eod-mobile button,.eod-mobile .outline{min-height:44px}
+.eod-mobile .card button{max-width:100%}
+}
