@@ -77,3 +77,27 @@ tr:nth-child(even) td{background:#152027}
 .eod-mobile [role="alertdialog"]{background:#11191f!important;color:#edf0f2!important;border:1px solid #3a4851!important}
 .eod-mobile [role="alertdialog"] p,.eod-mobile [role="alertdialog"] h2{color:#edf0f2!important}
 }
+
+/* Unified manager workspace: the application sidebar is the sole navigation. */
+@media screen {
+.robertos-shell-content .learner > .studyvisualnav,
+.robertos-shell-content .learner > .managernav,
+.robertos-shell-content .learner > .top,
+.robertos-shell-content .managerdash > .studyvisualnav,
+.robertos-shell-content .managerdash > .managernav,
+.robertos-shell-content .managerdash > .top {display:none!important}
+.robertos-shell-content,.robertos-shell-content .learner,.robertos-shell-content .managerdash,
+.robertos-shell-content .linewrap,.robertos-shell-content .wrap,
+.robertos-shell-content .narrow {background:#090e12!important;color:#edf0f2!important}
+.robertos-shell-content .linehero,.robertos-shell-content .languagechoice,
+.robertos-shell-content .linechecksection,.robertos-shell-content .linecomplete,
+.robertos-shell-content .lineitem,.robertos-shell-content .simplecheck,
+.robertos-shell-content .stationhead,.robertos-shell-content .dynamiclineitem {
+background:#11191f!important;color:#edf0f2!important;border-color:#34414a!important}
+.robertos-shell-content .linehero h1,.robertos-shell-content .linechecksection h2,
+.robertos-shell-content .languagechoice h1 {color:#f4f5f6!important}
+.robertos-shell-content .linewrap input,.robertos-shell-content .linewrap select,
+.robertos-shell-content .linewrap textarea,.robertos-shell-content .linewrap option {
+background:#172128!important;color:#edf0f2!important;border-color:#45535c!important}
+.robertos-shell-content .linewrap p,.robertos-shell-content .languagechoice p {color:#b7c1c9}
+}
