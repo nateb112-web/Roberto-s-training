@@ -1,0 +1,41 @@
+/* Roberto's charcoal and warm-gold visual system */
+:root{--red:#c9984b;--dark:#090e12;--muted:#aab6bf;--bg:#090e12;--card:#11191f;--line:#29343d;color-scheme:dark}
+html,body{background:#090e12!important;color:#edf0f2!important}
+body{color:#edf0f2}
+main,.wrap,.learner,.managerdash{color:#edf0f2}
+h1,h2,h3,h4,strong,b{color:inherit}
+.muted,.managerhero p,.managerpagehead p,.managerquickcard small{color:#aab6bf!important}
+.card,.stat,.managerquickcard,.employeeprofilecard,.studysetrow,.course,.studycreate,.manageremployees{background:#11191f!important;color:#edf0f2!important;border-color:#29343d!important;box-shadow:0 8px 24px #0003}
+.managerquickcard{border:1px solid #29343d!important;border-radius:12px!important}
+.managerquickcard:hover,.employeeprofilecard:hover{background:#1b252b!important;border-color:#b78c50!important}
+.managerquickcard b,.managerquickcard strong,.managerquickcard div,.managerquickcard span{color:#edf0f2}
+.managerquickcard>span,.managerquickcard>strong{color:#d9a451!important}
+.managerhero,.hero{background:#11191f!important;color:#edf0f2!important;border:1px solid #29343d!important;border-radius:16px!important}
+.managerhero h1,.hero h1{color:#fff!important}
+.studyvisualnav,.managernav,.top{background:#080c0f!important;border-bottom:1px solid #29343d!important;color:#edf0f2!important}
+.studyvisualnav a,.managernav a{color:#c6d0d7}
+.studyvisualnav a.active,.managernav a.active{color:#e7b66c!important;border-color:#d9a451!important}
+.scriptbrand{color:#fff!important}
+button,.btn{background:#a97835;color:#fff}
+button:hover,.btn:hover{filter:brightness(1.12)}
+.outline,.editlink{background:#1b252b!important;color:#e9edf0!important;border:1px solid #3a4851!important}
+input,select,textarea{background:#172128;color:#f1f3f5;border-color:#3a4851}
+input::placeholder,textarea::placeholder{color:#9ba9b3}
+a{color:#e1b56d}
+a:hover{color:#f4cb8a}
+hr{border-color:#29343d}
+table,th,td{border-color:#34414a;color:#edf0f2}
+th{background:#1b252b}
+td{background:#11191f}
+tr:nth-child(even) td{background:#152027}
+.section-title,.managersectionhead{color:#edf0f2}
+.managerstats>div{background:#11191f!important;border:1px solid #29343d!important;color:#edf0f2!important}
+.managerstats span,.managerstats small{color:#aab6bf!important}
+.managerprimary{background:#a97835!important}
+.passpill{background:#173c2a!important;color:#9ee68f!important}
+.tag{background:#34291a!important;color:#e5b76c!important}
+.eod-mobile{background:#090e12;color:#edf0f2}
+.eod-mobile .card{background:#11191f!important}
+.eod-mobile .eod-tipout-row{background:#172128!important;border-color:#29343d!important}
+.eod-mobile input,.eod-mobile select,.eod-mobile textarea{background:#172128!important;color:#fff!important;border-color:#3a4851!important}
+.eod-mobile .outline{background:#1b252b!important;color:#edf0f2!important}
