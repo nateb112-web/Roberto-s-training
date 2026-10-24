@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useMemo,useState} from "react";
 import Link from "next/link";
-type Day={business_date:string;entries:{cashOwedEmployee:number|string;paidCashTonight:number|string;tipoutsGiven:number|string;tipoutsReceived:number|string;tipoutsGivenDetails?:{recipient:string;amount:number|string}[]}[]};
+type Day={business_date:string;entries:{cashOwedEmployee:number|string;paidCashTonight:number|string;tipoutsGiven:number|string;tipoutsReceived:number|string;tipoutsGivenDetails?:{recipient:string;amount:number|string}[];tipoutsReceivedDetails?:{sender:string;amount:number|string}[]}[]};
 const API="https://xtuhannfnvsvvahrzyxj.supabase.co",KEY="sb_publishable_IygQd5vrXido1h8FMRjuaA_QrNzgFEC";
 const todayET=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
 const money=(n:number)=>n.toLocaleString("en-US",{style:"currency",currency:"USD"});
