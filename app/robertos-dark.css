@@ -136,3 +136,36 @@ background:#101a20!important;color:#fff!important;border:1px solid #61717c!impor
 .robertos-shell-content .linewrap .linechecksection button {font-size:14px}
 .robertos-shell-content .linewrap .linechecksection button.selected {border-color:#d7a65b!important}
 }
+
+/* Final Line Check contrast overrides: legacy stylesheet paints white card interiors. */
+@media screen {
+.robertos-shell-content .linewrap section.card.linechecksection {
+background:#151f26!important;border:1px solid #465761!important;color:#f4f6f8!important;box-shadow:none!important}
+.robertos-shell-content .linewrap section.card.linechecksection > * {
+border-color:#394b55!important}
+.robertos-shell-content .linewrap section.card.linechecksection .stationhead,
+.robertos-shell-content .linewrap section.card.linechecksection .stationhead * {
+color:#f5f6f8!important}
+.robertos-shell-content .linewrap section.card.linechecksection .stationhead h2,
+.robertos-shell-content .linewrap section.card.linechecksection .stationhead h3 {
+color:#ffffff!important;font-size:19px!important;font-weight:750!important;opacity:1!important}
+.robertos-shell-content .linewrap section.card.linechecksection .stationhead p,
+.robertos-shell-content .linewrap section.card.linechecksection .stationhead small {
+color:#e7b76e!important;font-size:13px!important;opacity:1!important}
+.robertos-shell-content .linewrap section.card.linechecksection .stationhead [class*="station"],
+.robertos-shell-content .linewrap section.card.linechecksection .stationhead [class*="name"] {
+color:#ffffff!important;opacity:1!important}
+.robertos-shell-content .linewrap section.card.linechecksection .dynamiclineitem,
+.robertos-shell-content .linewrap section.card.linechecksection .lineitem,
+.robertos-shell-content .linewrap section.card.linechecksection .simplecheck {
+background:#17232b!important;color:#f5f6f8!important}
+.robertos-shell-content .linewrap section.card.linechecksection .addextra {
+display:block;background:#1d2b33!important;color:#f4c477!important;border-color:#43545d!important}
+.robertos-shell-content .linewrap section.card.linechecksection .itemfield,
+.robertos-shell-content .linewrap section.card.linechecksection .tempfield,
+.robertos-shell-content .linewrap section.card.linechecksection .linenote {color:#dce5ea!important}
+.robertos-shell-content .linewrap section.card.linechecksection .tempstatus {color:#a4e0b4!important}
+.robertos-shell-content .linewrap section.card.linechecksection button:not(.danger):not(.selected) {color:#f4f6f8}
+.robertos-shell-content .linewrap section.card.linechecksection button.yes,
+.robertos-shell-content .linewrap section.card.linechecksection button.no {color:#172128!important}
+}
