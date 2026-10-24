@@ -101,3 +101,38 @@ background:#11191f!important;color:#edf0f2!important;border-color:#34414a!import
 background:#172128!important;color:#edf0f2!important;border-color:#45535c!important}
 .robertos-shell-content .linewrap p,.robertos-shell-content .languagechoice p {color:#b7c1c9}
 }
+
+/* Line Check readability: restore contrast and eliminate pale station gutters. */
+@media screen {
+.robertos-shell-content .linewrap .linechecksection,
+.robertos-shell-content .linewrap .linechecksection .stationhead,
+.robertos-shell-content .linewrap .lineitem,
+.robertos-shell-content .linewrap .dynamiclineitem,
+.robertos-shell-content .linewrap .simplecheck {
+background:#172128!important;color:#f2f5f6!important;border-color:#465762!important}
+.robertos-shell-content .linewrap .linechecksection{border:1px solid #465762!important;border-radius:13px!important;overflow:hidden}
+.robertos-shell-content .linewrap .linechecksection .stationhead{background:#202d35!important;border-bottom:1px solid #52616b!important;padding:16px!important}
+.robertos-shell-content .linewrap .linechecksection .stationhead *,
+.robertos-shell-content .linewrap .linechecksection h2,
+.robertos-shell-content .linewrap .linechecksection h3,
+.robertos-shell-content .linewrap .linechecksection b,
+.robertos-shell-content .linewrap .linechecksection strong,
+.robertos-shell-content .linewrap .linechecksection label,
+.robertos-shell-content .linewrap .linechecksection .checkcopy {color:#f4f6f7!important}
+.robertos-shell-content .linewrap .linechecksection .eyebrow,
+.robertos-shell-content .linewrap .linechecksection small,
+.robertos-shell-content .linewrap .linechecksection .itemfield>span,
+.robertos-shell-content .linewrap .linechecksection .tempfield,
+.robertos-shell-content .linewrap .linechecksection .linenote {color:#c7d3da!important}
+.robertos-shell-content .linewrap .dynamiclineitem{padding:13px!important;border-bottom:1px solid #3b4b55!important}
+.robertos-shell-content .linewrap .linechecksection input,
+.robertos-shell-content .linewrap .linechecksection select,
+.robertos-shell-content .linewrap .linechecksection textarea {
+background:#101a20!important;color:#fff!important;border:1px solid #61717c!important;min-height:40px;font-size:14px!important}
+.robertos-shell-content .linewrap .linechecksection input::placeholder,
+.robertos-shell-content .linewrap .linechecksection textarea::placeholder {color:#aabac4!important;opacity:1}
+.robertos-shell-content .linewrap .linechecksection .addextra {background:#24323a!important;color:#f0c681!important;border:1px solid #56636b!important;margin:10px!important}
+.robertos-shell-content .linewrap .linechecksection .simplecheck {margin:12px!important;padding:15px!important;border:1px solid #4b5b64!important;border-radius:10px!important}
+.robertos-shell-content .linewrap .linechecksection button {font-size:14px}
+.robertos-shell-content .linewrap .linechecksection button.selected {border-color:#d7a65b!important}
+}
