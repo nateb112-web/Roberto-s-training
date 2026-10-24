@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useMemo,useState} from "react";
 import Link from "next/link";
+import "./earnings.css";
 type Day={business_date:string;entries:{cashOwedEmployee:number|string;paidCashTonight:number|string;tipoutsGiven:number|string;tipoutsReceived:number|string;tipoutsGivenDetails?:{recipient:string;amount:number|string}[];tipoutsReceivedDetails?:{sender:string;amount:number|string}[]}[]};
 const API="https://xtuhannfnvsvvahrzyxj.supabase.co",KEY="sb_publishable_IygQd5vrXido1h8FMRjuaA_QrNzgFEC";
 const todayET=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
@@ -10,8 +11,8 @@ const sum=(d:Day,k:keyof Day["entries"][number])=>d.entries.reduce((n,e)=>n+Numb
 const amountColor=(n:number)=>n>0?"#177245":n<0?"#b71922":"#0d1b26";
 const net=(d:Day)=>sum(d,"cashOwedEmployee")-sum(d,"paidCashTonight")-sum(d,"tipoutsGiven")+sum(d,"tipoutsReceived");
 export default function MyEarnings(){
-const [expandedTipouts,setExpandedTipouts]=useState<string[]>([]),[days,setDays]=useState<Day[]>([]),[week,setWeek]=useState(""),[expanded,setExpanded]=useState<string[]>([]),[error,setError]=useState(""),[loading,setLoading]=useState(true);
-useEffect(()=>{(async()=>{try{const auth=JSON.parse(sessionStorage.getItem("robertos_auth")||"null");if(!auth?.access_token)throw Error("Sign in to view your earnings.");const r=await fetch(API+"/rest/v1/rpc/my_approved_eod",{method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+auth.access_token,"Content-Type":"application/json"},body:"{}"});if(!r.ok)throw Error("Could not load approved earnings.");const data=await r.json() as Day[];setDays(data);setWeek(monday(todayET()))}catch(e){setError(e instanceof Error?e.message:"Unable to load earnings")}finally{setLoading(false)}})()},[]);
+const [receivedTips,setReceivedTips]=useState<{business_date:string;sender:string;amount:number}[]>([]),[expandedReceived,setExpandedReceived]=useState<string[]>([]),[expandedTipouts,setExpandedTipouts]=useState<string[]>([]),[days,setDays]=useState<Day[]>([]),[week,setWeek]=useState(""),[expanded,setExpanded]=useState<string[]>([]),[error,setError]=useState(""),[loading,setLoading]=useState(true);
+useEffect(()=>{(async()=>{try{const auth=JSON.parse(sessionStorage.getItem("robertos_auth")||"null");if(!auth?.access_token)throw Error("Sign in to view your earnings.");const headers={apikey:KEY,Authorization:"Bearer "+auth.access_token,"Content-Type":"application/json"};const [r,received]=await Promise.all([fetch(API+"/rest/v1/rpc/my_approved_eod",{method:"POST",headers,body:"{}"}),fetch(API+"/rest/v1/rpc/my_tipouts_received_details",{method:"POST",headers,body:"{}"})]);if(received.ok)setReceivedTips(await received.json());if(!r.ok)throw Error("Could not load approved earnings.");const data=await r.json() as Day[];setDays(data);setWeek(monday(todayET()))}catch(e){setError(e instanceof Error?e.message:"Unable to load earnings")}finally{setLoading(false)}})()},[]);
 const weeks=useMemo(()=>[...new Set([monday(todayET()),...days.map(d=>monday(d.business_date))].filter(Boolean))].sort().reverse(),[days,week]);
 const selected=days.filter(d=>monday(d.business_date)===week).sort((a,b)=>a.business_date.localeCompare(b.business_date));
 const end=week?new Date(new Date(week+"T12:00:00Z").getTime()+6*86400000).toISOString().slice(0,10):"";
