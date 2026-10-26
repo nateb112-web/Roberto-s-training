@@ -11,6 +11,8 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "web-push": "3.6.7",
+    "@types/web-push": "3.6.4"
   }
 }
