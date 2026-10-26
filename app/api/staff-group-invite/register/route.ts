@@ -1,3 +1,4 @@
+import webpush from "web-push";
 import {NextRequest,NextResponse} from "next/server";
 import {createHash} from "node:crypto";
 const base="https://xtuhannfnvsvvahrzyxj.supabase.co";
@@ -26,6 +27,22 @@ export async function POST(request:NextRequest){
     })});
     if(!sent.ok)console.error("Owner signup notification failed",sent.status);
    }catch(e){console.error("Owner signup notification error",e)}
+  }
+  if(newAccount&&process.env.SUPABASE_SERVICE_ROLE_KEY&&process.env.VAPID_PUBLIC_KEY&&process.env.VAPID_PRIVATE_KEY){
+   try{
+    const owner=await fetch(base+"/rest/v1/staff_profiles?email=eq.natebarry11%40gmail.com&access_role=eq.admin&select=user_id",{headers:{apikey:process.env.SUPABASE_SERVICE_ROLE_KEY,Authorization:"Bearer "+process.env.SUPABASE_SERVICE_ROLE_KEY},cache:"no-store"});
+    if(owner.ok){
+     const ownerId=(await owner.json())[0]?.user_id;
+     if(ownerId){
+      const subs=await fetch(base+"/rest/v1/staff_push_subscriptions?user_id=eq."+encodeURIComponent(ownerId)+"&select=subscription",{headers:{apikey:process.env.SUPABASE_SERVICE_ROLE_KEY,Authorization:"Bearer "+process.env.SUPABASE_SERVICE_ROLE_KEY},cache:"no-store"});
+      if(subs.ok){
+       webpush.setVapidDetails(process.env.VAPID_SUBJECT||"mailto:natebarry11@gmail.com",process.env.VAPID_PUBLIC_KEY,process.env.VAPID_PRIVATE_KEY);
+       const payload=JSON.stringify({title:"New Employee: "+name,body:name+" joined Roberto's Staff ("+positions.join(", ")+")",url:"/manager/employees",tag:"new-staff-"+result.user.id});
+       await Promise.allSettled((await subs.json()).map((row:{subscription:webpush.PushSubscription})=>webpush.sendNotification(row.subscription,payload)));
+      }
+     }
+    }
+   }catch(e){console.error("Owner signup push notification failed",e)}
   }
   return NextResponse.json({success:true});
  }catch{return NextResponse.json({error:"Registration failed."},{status:500})}
