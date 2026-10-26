@@ -8,7 +8,7 @@ export default function AuthGate({children}:{children:React.ReactNode}){
  const path=usePathname(),[allowed,setAllowed]=useState(false),[role,setRole]=useState("staff"),[error,setError]=useState("");
  useEffect(()=>{let cancelled=false;setAllowed(false);setError("");
  async function check(){
-  if(path==="/login"||path==="/set-password"){if(!cancelled)setAllowed(true);return}
+  if(path==="/login"||path==="/set-password"||path==="/join"||path==="/join"){if(!cancelled)setAllowed(true);return}
   try{
    const raw=sessionStorage.getItem("robertos_auth");
    if(!raw)throw Error("not signed in");
