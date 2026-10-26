@@ -3,7 +3,7 @@ const base="https://xtuhannfnvsvvahrzyxj.supabase.co";
 const key="sb_publishable_IygQd5vrXido1h8FMRjuaA_QrNzgFEC";
 export async function POST(request:NextRequest){
  try{
-  const token=request.headers.get("authorization")?.replace(/^Bearer\\s+/i,"");
+  const token=request.headers.get("authorization")?.replace(/^Bearer\s+/i,"");
   if(!token)return NextResponse.json({error:"Sign in required"},{status:401});
   const headers={apikey:key,Authorization:"Bearer "+token};
   const userResponse=await fetch(base+"/auth/v1/user",{headers,cache:"no-store"});
