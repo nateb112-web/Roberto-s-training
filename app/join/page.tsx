@@ -1,0 +1,1 @@
+import {Suspense} from "react";import JoinForm from "./JoinForm";export default function Join(){return <Suspense fallback={<p>Loading invitation…</p>}><JoinForm/></Suspense>}
