@@ -15,6 +15,18 @@ export async function POST(request:NextRequest){
   const signup=await fetch(base+"/auth/v1/signup",{method:"POST",headers:{apikey:publicKey,"Content-Type":"application/json"},body:JSON.stringify({email,password,data:{full_name:name,staff_positions:positions,group_invite_hash:hash}})});
   const result=await signup.json();
   if(!signup.ok||!result.user?.id)return NextResponse.json({error:"Unable to register. This email may already have an account."},{status:400});
+  const newAccount=Array.isArray(result.user.identities)?result.user.identities.length>0:!!result.user.created_at;
+  if(newAccount&&process.env.RESEND_API_KEY){
+   try{
+    const sent=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+process.env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({
+     from:"Roberto's Staff <notifications@robertosct.com>",
+     to:["natebarry11@gmail.com"],
+     subject:"New Roberto's Staff account created",
+     text:["A new staff account has been created.","Name: "+name,"Email: "+email,"Positions: "+positions.join(", "),"","View: https://staff.robertosct.com/manager/employees"].join("\n")
+    })});
+    if(!sent.ok)console.error("Owner signup notification failed",sent.status);
+   }catch(e){console.error("Owner signup notification error",e)}
+  }
   return NextResponse.json({success:true});
  }catch{return NextResponse.json({error:"Registration failed."},{status:500})}
 }
