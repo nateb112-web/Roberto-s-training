@@ -16,6 +16,6 @@ export async function POST(request:NextRequest){
   const token_hash=createHash("sha256").update(token).digest("hex");
   const saved=await fetch(base+"/rest/v1/rpc/create_staff_group_invite",{method:"POST",headers:{apikey:publishable,Authorization:"Bearer "+jwt,"Content-Type":"application/json"},body:JSON.stringify({p_token_hash:token_hash})});
   if(!saved.ok)return NextResponse.json({error:"Unable to save invitation"},{status:503});
-  return NextResponse.json({url:new URL("/join?invite="+token,request.nextUrl.origin).toString()});
+  return NextResponse.json({url:"https://staff.robertosct.com/join?invite="+token});
  }catch{return NextResponse.json({error:"Unable to create invite"},{status:500})}
 }
