@@ -27,8 +27,10 @@ export async function POST(request:NextRequest){
   const report=(await reportResponse.json())[0];
   if(!report)return response("EOD must be approved before notifying employees",409);
   const eligible=new Set<string>();
-  for(const entry of (report.entries||[]) as Entry[]){
-   if(Number(entry.cashOwedEmployee||0)>0&&entry.name?.trim())eligible.add(entry.name.trim().toLocaleLowerCase("en-US"));
+  for(const entry of (report.entries||[]) as (Entry & {takeout?:boolean})[]){
+   const name=entry.name?.trim();
+   if(!name||/^(AM|PM)\s+Takeout$/i.test(name))continue;
+   eligible.add(name.toLocaleLowerCase("en-US"));
    for(const tip of entry.tipouts||[])if(Number(tip.amount||0)>0&&tip.recipient?.trim())eligible.add(tip.recipient.trim().toLocaleLowerCase("en-US"));
   }
   if(!eligible.size)return NextResponse.json({ok:true,eligible:0,sent:0});
