@@ -39,7 +39,7 @@ export async function POST(request:NextRequest){
   webpush.setVapidDetails(process.env.VAPID_SUBJECT||"mailto:natebarry11@gmail.com",process.env.VAPID_PUBLIC_KEY,process.env.VAPID_PRIVATE_KEY);
   let sent=0,alreadyNotified=0,withoutDevices=0;
   for(const profile of profiles){
-   if(profile.access_role!=="staff"||!eligible.has(profile.display_name?.trim().toLocaleLowerCase("en-US")))continue;
+   if(!eligible.has(profile.display_name?.trim().toLocaleLowerCase("en-US")))continue;
    const subscriptionsResponse=await fetch(base+"/rest/v1/staff_push_subscriptions?user_id=eq."+encodeURIComponent(profile.user_id)+"&select=subscription",{headers:adminHeaders,cache:"no-store"});
    if(!subscriptionsResponse.ok)continue;
    const subscriptions=await subscriptionsResponse.json();
@@ -48,7 +48,7 @@ export async function POST(request:NextRequest){
    const claim=await fetch(base+"/rest/v1/eod_tip_notification_deliveries",{method:"POST",headers:{...adminHeaders,Prefer:"return=minimal"},body:JSON.stringify({business_date:businessDate,user_id:profile.user_id})});
    if(claim.status===409){alreadyNotified++;continue;}
    if(!claim.ok)continue; // Fail closed if delivery ledger is not installed.
-   const payload=JSON.stringify({title:"Roberto's Staff",body:"Your Tips from "+day+" are ready to be viewed",url:"/staff",tag:"eod-tips-"+businessDate});
+   const payload=JSON.stringify({title:"Roberto's Staff",body:"Your Tips from "+day+" are ready to be viewed",url:"/my-earnings",tag:"eod-tips-"+businessDate});
    const results=await Promise.allSettled(subscriptions.map((s:{subscription:webpush.PushSubscription})=>webpush.sendNotification(s.subscription,payload)));
    if(results.some(r=>r.status==="fulfilled"))sent++;
   }
