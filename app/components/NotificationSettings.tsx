@@ -2,7 +2,8 @@
 import {useEffect,useState} from "react";
 function keyBytes(s:string){const padded=s.replace(/-/g,"+").replace(/_/g,"/");const raw=atob(padded+"=".repeat((4-padded.length%4)%4));return Uint8Array.from(raw,c=>c.charCodeAt(0))}
 export default function NotificationSettings({onboarding=false}:{onboarding?:boolean}){
- const [dismissed,setDismissed]=useState(false);\n const [unsupported,setUnsupported]=useState(false);
+ const [dismissed,setDismissed]=useState(false);
+ const [unsupported,setUnsupported]=useState(false);
  const [status,setStatus]=useState("Checking notification settings…"),[enabled,setEnabled]=useState(false),[busy,setBusy]=useState(false);
  async function refresh(){if(!("serviceWorker" in navigator)||!("PushManager" in window)){setUnsupported(true);setStatus("Push notifications need the Roberto’s Staff Home Screen app on iPhone. Open this website in Safari, tap Share, choose Add to Home Screen, then open the new icon and enable notifications.");return}setUnsupported(false);const reg=await navigator.serviceWorker.getRegistration();const sub=await reg?.pushManager.getSubscription();setEnabled(!!sub&&Notification.permission==="granted");setStatus(Notification.permission==="denied"?"Notifications are blocked in your phone or browser settings.":sub?"Notifications are enabled on this device.":"Notifications are off on this device.")}
  useEffect(()=>{if(onboarding&&localStorage.getItem("robertos_push_prompt_seen")==="1")setDismissed(true);refresh().catch(()=>setStatus("Unable to check notifications."))},[onboarding]);
