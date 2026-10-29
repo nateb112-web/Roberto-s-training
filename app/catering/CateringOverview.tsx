@@ -1,19 +1,19 @@
 "use client";
 import {useCallback,useEffect,useMemo,useState} from "react";
-type Event={id:string;event_name:string;customer_name:string;event_date:string;start_time:string|null;guest_count:number;event_type:string;status:string;deposit_paid:boolean;contract_status:string};
+type Event={id:string;event_name:string;customer_name:string;event_date:string;start_time:string|null;guest_count:number;event_type:string;status:string;deposit_paid:boolean;deposit_amount:number;contract_status:string};
 const API="https://xtuhannfnvsvvahrzyxj.supabase.co/rest/v1/catering_events";
 const KEY="sb_publishable_IygQd5vrXido1h8FMRjuaA_QrNzgFEC";
 const card:React.CSSProperties={background:"#131f2b",border:"1px solid #2b3a49",borderRadius:13,padding:20};
 export default function CateringOverview({onOpenEvents}:{onOpenEvents:()=>void}) {
- const [events,setEvents]=useState<Event[]>([]),[error,setError]=useState(""),[loading,setLoading]=useState(true),[month,setMonth]=useState(()=>new Date());
- const refresh=useCallback(async()=>{setLoading(true);try{const token=JSON.parse(sessionStorage.getItem("robertos_auth")||"{}").access_token;if(!token)throw Error("Please sign in again.");const response=await fetch(API+"?select=id,event_name,customer_name,event_date,start_time,guest_count,event_type,status,deposit_paid,contract_status&order=event_date.asc",{headers:{apikey:KEY,Authorization:"Bearer "+token},cache:"no-store"});if(!response.ok)throw Error("Could not load booking summaries.");setEvents(await response.json());setError("")}catch(e){setError(String(e))}finally{setLoading(false)}},[]);
+ const [events,setEvents]=useState<Event[]>([]),[depositTotals,setDepositTotals]=useState<Record<string,number>>({}),[error,setError]=useState(""),[loading,setLoading]=useState(true),[month,setMonth]=useState(()=>new Date());
+ const refresh=useCallback(async()=>{setLoading(true);try{const token=JSON.parse(sessionStorage.getItem("robertos_auth")||"{}").access_token;if(!token)throw Error("Please sign in again.");const auth={apikey:KEY,Authorization:"Bearer "+token};const [response,pr]=await Promise.all([fetch(API+"?select=id,event_name,customer_name,event_date,start_time,guest_count,event_type,status,deposit_paid,deposit_amount,contract_status&order=event_date.asc",{headers:auth,cache:"no-store"}),fetch("https://xtuhannfnvsvvahrzyxj.supabase.co/rest/v1/catering_payments?select=event_id,amount&payment_type=eq.deposit",{headers:auth,cache:"no-store"})]);if(!response.ok||!pr.ok)throw Error("Could not load booking summaries.");setEvents(await response.json());const ledger=await pr.json();const totals:Record<string,number>={};for(const p of ledger){totals[p.event_id]=(totals[p.event_id]||0)+Number(p.amount)}setDepositTotals(totals);setError("")}catch(e){setError(String(e))}finally{setLoading(false)}},[]);
  useEffect(()=>{void refresh()},[refresh]);
- const today=new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());const part=(type:string)=>parts.find(p=>p.type===type)?.value||"";const today=part("year")+"-"+part("month")+"-"+part("day");
  const upcoming=events.filter(e=>e.event_date>=today&&e.status!=="cancelled"&&e.status!=="completed");
  const next30=new Date(today+"T12:00:00");next30.setDate(next30.getDate()+30);const horizon=next30.toISOString().slice(0,10);
  const in30=upcoming.filter(e=>e.event_date<=horizon);
  const pending=events.filter(e=>e.contract_status==="sent"&&e.status!=="cancelled");
- const unpaid=upcoming.filter(e=>!e.deposit_paid);
+ const unpaid=upcoming.filter(e=>!e.deposit_paid&&(depositTotals[e.id]||0)<Number(e.deposit_amount));
  const days=useMemo(()=>{const y=month.getFullYear(),m=month.getMonth(),first=new Date(y,m,1).getDay(),length=new Date(y,m+1,0).getDate();return Array.from({length:Math.ceil((first+length)/7)*7},(_,i)=>{const d=i-first+1;return d>0&&d<=length?d:null})},[month]);
  const stats=[["Upcoming Events",in30.length,"Next 30 days"],["Pending Contracts",pending.length,"Sent, awaiting signature"],["Unpaid Deposits",unpaid.length,"Upcoming bookings"],["Total Guests",in30.reduce((sum,e)=>sum+e.guest_count,0),"Next 30 days"]];
  return <div>{error&&<p role="alert" style={{color:"#ffae9b"}}>{error} <button onClick={()=>void refresh()}>Retry</button></p>}
