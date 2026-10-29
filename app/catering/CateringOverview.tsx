@@ -13,7 +13,7 @@ export default function CateringOverview({onOpenEvents}:{onOpenEvents:()=>void})
  const next30=new Date(today+"T12:00:00");next30.setDate(next30.getDate()+30);const horizon=next30.toISOString().slice(0,10);
  const in30=upcoming.filter(e=>e.event_date<=horizon);
  const pending=events.filter(e=>e.contract_status==="sent"&&e.status!=="cancelled");
- const unpaid=upcoming.filter(e=>!e.deposit_paid&&(depositTotals[e.id]||0)<Number(e.deposit_amount));
+ const unpaid=upcoming.filter(e=>Number(e.deposit_amount)>0&&!e.deposit_paid&&(depositTotals[e.id]||0)<Number(e.deposit_amount));
  const days=useMemo(()=>{const y=month.getFullYear(),m=month.getMonth(),first=new Date(y,m,1).getDay(),length=new Date(y,m+1,0).getDate();return Array.from({length:Math.ceil((first+length)/7)*7},(_,i)=>{const d=i-first+1;return d>0&&d<=length?d:null})},[month]);
  const stats=[["Upcoming Events",in30.length,"Next 30 days"],["Pending Contracts",pending.length,"Sent, awaiting signature"],["Unpaid Deposits",unpaid.length,"Upcoming bookings"],["Total Guests",in30.reduce((sum,e)=>sum+e.guest_count,0),"Next 30 days"]];
  return <div>{error&&<p role="alert" style={{color:"#ffae9b"}}>{error} <button onClick={()=>void refresh()}>Retry</button></p>}
