@@ -5,7 +5,29 @@ const endpoint="https://xtuhannfnvsvvahrzyxj.supabase.co/auth/v1/";
 const apiKey="sb_publishable_IygQd5vrXido1h8FMRjuaA_QrNzgFEC";
 export default function Login(){
  const [remember,setRemember]=useState(false);
- useEffect(()=>{setRemember(localStorage.getItem("robertos_remember_device")==="yes")},[]);
+ useEffect(()=>{
+  const saved=localStorage.getItem("robertos_remember_device")==="yes";
+  setRemember(saved);
+  if(!saved)return;
+  const raw=localStorage.getItem("robertos_auth");
+  if(!raw)return;
+  let session:{access_token?:string;refresh_token?:string};
+  try{session=JSON.parse(raw)}catch{localStorage.removeItem("robertos_auth");return}
+  if(!session.refresh_token)return;
+  let active=true;
+  (async()=>{
+   try{
+    const response=await fetch(endpoint+"token?grant_type=refresh_token",{method:"POST",headers:{"Content-Type":"application/json",apikey:apiKey},body:JSON.stringify({refresh_token:session.refresh_token})});
+    if(!response.ok)return;
+    const refreshed=await response.json();
+    if(!active||!refreshed.access_token)return;
+    localStorage.setItem("robertos_auth",JSON.stringify(refreshed));
+    sessionStorage.setItem("robertos_auth",JSON.stringify(refreshed));
+    window.location.replace("/");
+   }catch{}
+  })();
+  return()=>{active=false};
+ },[]);
  const [forgot,setForgot]=useState(false),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false);
  async function submit(e:React.FormEvent<HTMLFormElement>){
   e.preventDefault();setBusy(true);setMessage("");
