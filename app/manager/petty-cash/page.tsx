@@ -39,9 +39,28 @@ export default function PettyCash(){
  }catch(e){setMessage(e instanceof Error?e.message:"Unable to save extra transaction.")}finally{setExtraBusy(false)}
  }
  const extraLedgerTotal=extraTransactions.reduce((sum,t)=>sum+(t.entry_type==="in"?1:-1)*Number(t.amount),0);
+ const BASE=500;
+ const depositsBefore=(d:string)=>eods.filter(e=>e.business_date<d&&["submitted","approved","finalized"].includes(e.status)&&e.actual_deposit!==null).reduce((n,e)=>n+Number(e.actual_deposit),0);
+ const movementsThrough=(d:string)=>entries.filter(e=>e.business_date<=d).reduce((n,e)=>n+(e.entry_type==="in"?1:-1)*Number(e.amount),0);
+ const expectedBag=(d:string)=>BASE+depositsBefore(d)+movementsThrough(d);
+ async function removeWeeklyDeposits(){
+ const n=Math.round((expectedBag(date)-BASE)*100)/100;
+ if(n<=0)return setMessage("There are no accumulated deposits to remove.");
+ if(entries.some(e=>e.business_date===date&&e.reason==="Weekly Deposit Removed"))return setMessage("A weekly removal is already recorded for this date.");
+ if(!window.confirm("Confirm "+dollars(n)+" was physically removed from the bag on "+date+"?"))return;
+ setBusy(true);setMessage("");
+ try{
+ const me=await fetch(API+"/auth/v1/user",{headers:headers(token)});
+ if(!me.ok)throw Error("Please sign in again.");
+ const user=await me.json();
+ const res=await fetch(API+"/rest/v1/petty_cash_entries",{method:"POST",headers:{...headers(token),"Content-Type":"application/json"},body:JSON.stringify({business_date:date,entry_type:"out",amount:n,reason:"Weekly Deposit Removed",receipt_path:null,created_by:user.id})});
+ if(!res.ok)throw Error("Unable to record weekly removal.");
+ await refresh(token);setMessage("Weekly deposits removed. Expected bag balance is now $500.");
+ }catch(e){setMessage(e instanceof Error?e.message:"Unable to save removal.");}finally{setBusy(false)}
+ }
  const day=days.find(d=>d.business_date===date),daily=entries.filter(e=>e.business_date===date),prior=days.filter(d=>d.business_date<date).sort((a,b)=>b.business_date.localeCompare(a.business_date))[0];
  const dayTotal=(d:Day)=>Number(d.counted_opening)+entries.filter(e=>e.business_date===d.business_date).reduce((sum,e)=>sum+(e.entry_type==="in"?1:-1)*Number(e.amount),0);
- const expected=prior?dayTotal(prior):null,closing=day?dayTotal(day):null,variance=day&&expected!==null?Number(day.counted_opening)-expected:null;
+ const expected=expectedBag(date),closing=day?Number(day.counted_opening):null,variance=day?Math.round((Number(day.counted_opening)-expected)*100)/100:null;
  const card:React.CSSProperties={background:"#172632",border:"1px solid #334955",borderRadius:15,padding:20};
  const field:React.CSSProperties={background:"#101d26",border:"1px solid #465a66",color:"white",padding:12,borderRadius:9,width:"100%",marginTop:7};
  async function startDay(){const n=billTotal;if(!denominations.every(d=>Number.isInteger(Number(bills[String(d)]||0))&&Number(bills[String(d)]||0)>=0))return setMessage("Enter whole, nonnegative bill quantities.");setBusy(true);setMessage("");try{const res=await fetch(API+"/rest/v1/petty_cash_days",{method:"POST",headers:{...headers(token),"Content-Type":"application/json"},body:JSON.stringify({business_date:date,counted_opening:n,bill_counts:Object.fromEntries(denominations.map(d=>[String(d),Number(bills[String(d)]||0)])),counted_by:(await (await fetch(API+"/auth/v1/user",{headers:headers(token)})).json()).id})});if(!res.ok)throw Error("Unable to save opening count. This day may already exist.");await refresh(token);setCount("");setMessage("Opening count recorded.")}catch(e){setMessage(String(e))}finally{setBusy(false)}}
