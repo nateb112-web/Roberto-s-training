@@ -12,9 +12,10 @@ export default function AuthGate({children}:{children:React.ReactNode}){
  async function check(){
   if(path==="/login"||path==="/set-password"||path==="/join"||path==="/join"){if(!cancelled)setAllowed(true);return}
   try{
-   const raw=sessionStorage.getItem("robertos_auth");
+   const raw=sessionStorage.getItem("robertos_auth")||(localStorage.getItem("robertos_remember_device")==="yes"?localStorage.getItem("robertos_auth"):null);
+   if(raw&&!sessionStorage.getItem("robertos_auth"))sessionStorage.setItem("robertos_auth",raw);
    if(!raw)throw Error("not signed in");
-   let session=JSON.parse(raw);let token=session.access_token;const refresh=async()=>{if(!session.refresh_token)return false;const response=await fetch(base+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:key,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:session.refresh_token})});if(!response.ok)return false;session=await response.json();token=session.access_token;sessionStorage.setItem("robertos_auth",JSON.stringify(session));return true};if(session.expires_at&&Date.now()/1000>session.expires_at-120)await refresh();
+   let session=JSON.parse(raw);let token=session.access_token;const refresh=async()=>{if(!session.refresh_token)return false;const response=await fetch(base+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:key,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:session.refresh_token})});if(!response.ok)return false;session=await response.json();token=session.access_token;sessionStorage.setItem("robertos_auth",JSON.stringify(session));if(localStorage.getItem("robertos_remember_device")==="yes")localStorage.setItem("robertos_auth",JSON.stringify(session));return true};if(session.expires_at&&Date.now()/1000>session.expires_at-120)await refresh();
    if(!token)throw Error("missing token");
    let headers={apikey:key,Authorization:"Bearer "+token};
    let me=await fetch(base+"/auth/v1/user",{headers,cache:"no-store"});if(me.status===401&&await refresh()){headers={apikey:key,Authorization:"Bearer "+token};me=await fetch(base+"/auth/v1/user",{headers,cache:"no-store"})}
@@ -32,7 +33,7 @@ export default function AuthGate({children}:{children:React.ReactNode}){
    if(path==="/"&&["admin","manager"].includes(profile.access_role)){window.location.replace("/manager");return}
    if(!cancelled){setRole(profile.access_role);setAllowed(true)}
   }catch(e){
-   if(!cancelled){sessionStorage.removeItem("robertos_auth");window.location.replace("/login?next="+encodeURIComponent(path))}
+   if(!cancelled){sessionStorage.removeItem("robertos_auth");localStorage.removeItem("robertos_auth");window.location.replace("/login?next="+encodeURIComponent(path))}
   }
  }
  check();return()=>{cancelled=true}
