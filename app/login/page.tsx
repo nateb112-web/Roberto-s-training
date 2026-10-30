@@ -1,9 +1,11 @@
 "use client";
-import {useState} from "react";
+import {useEffect,useState} from "react";
 import Link from "next/link";
 const endpoint="https://xtuhannfnvsvvahrzyxj.supabase.co/auth/v1/";
 const apiKey="sb_publishable_IygQd5vrXido1h8FMRjuaA_QrNzgFEC";
 export default function Login(){
+ const [remember,setRemember]=useState(false);
+ useEffect(()=>{setRemember(localStorage.getItem("robertos_remember_device")==="yes")},[]);
  const [forgot,setForgot]=useState(false),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false);
  async function submit(e:React.FormEvent<HTMLFormElement>){
   e.preventDefault();setBusy(true);setMessage("");
@@ -12,8 +14,8 @@ export default function Login(){
    const result=await response.json();
    if(!response.ok)throw new Error(result.msg||result.error_description||result.message||"Sign-in failed");
    if(forgot)setMessage("If this email has an account, a password setup link has been sent. Please check your inbox and spam folder.");
-   else {if(!result.access_token)throw new Error("Verify your email before signing in.");sessionStorage.setItem("robertos_auth",JSON.stringify(result));window.location.assign("/");}
+   else {if(!result.access_token)throw new Error("Verify your email before signing in.");sessionStorage.setItem("robertos_auth",JSON.stringify(result));if(remember){localStorage.setItem("robertos_remember_device","yes");localStorage.setItem("robertos_auth",JSON.stringify(result))}else{localStorage.removeItem("robertos_remember_device");localStorage.removeItem("robertos_auth")}window.location.assign("/");}
   }catch(error){setMessage(error instanceof Error?error.message:"Something went wrong")}finally{setBusy(false)}
  }
- return <main className="wrap" style={{maxWidth:520,paddingTop:60}}><div className="card" style={{padding:32}}><Link href="/">← Roberto's Training</Link><h1>{forgot?"Reset Password":"Sign In"}</h1><p>{forgot?"Enter your email and we will send a secure password reset link.":"New employees should use the registration link provided by a manager."}</p><form onSubmit={submit} style={{display:"grid",gap:14}}><label>Email<br/><input style={{width:"100%",padding:12}} type="email" autoComplete="email" required value={email} onChange={e=>setEmail(e.target.value)}/></label>{!forgot&&<label>Password<br/><input style={{width:"100%",padding:12}} type="password" minLength={6} autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label>}<button disabled={busy} type="submit">{busy?"Please wait…":forgot?"Send Reset Link":"Sign In"}</button></form>{message&&<p role="status">{message}</p>}<div style={{display:"flex",gap:12,flexWrap:"wrap",marginTop:20}}><button type="button" className="outline" onClick={()=>{setForgot(false);setMessage("")}}>Sign In</button>{!forgot&&<button type="button" className="outline" onClick={()=>{setForgot(true);setMessage("")}}>Forgot Password?</button>}</div></div></main>;
+ return <main className="wrap" style={{maxWidth:520,paddingTop:60}}><div className="card" style={{padding:32}}><Link href="/">← Roberto's Training</Link><h1>{forgot?"Reset Password":"Sign In"}</h1><p>{forgot?"Enter your email and we will send a secure password reset link.":"New employees should use the registration link provided by a manager."}</p><form onSubmit={submit} style={{display:"grid",gap:14}}><label>Email<br/><input style={{width:"100%",padding:12}} type="email" autoComplete="email" required value={email} onChange={e=>setEmail(e.target.value)}/></label>{!forgot&&<label>Password<br/><input style={{width:"100%",padding:12}} type="password" minLength={6} autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label>}{!forgot&&<label style={{display:"flex",alignItems:"center",gap:9}}><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/> Remember this device (stay signed in)</label>}<button disabled={busy} type="submit">{busy?"Please wait…":forgot?"Send Reset Link":"Sign In"}</button></form>{message&&<p role="status">{message}</p>}<div style={{display:"flex",gap:12,flexWrap:"wrap",marginTop:20}}><button type="button" className="outline" onClick={()=>{setForgot(false);setMessage("")}}>Sign In</button>{!forgot&&<button type="button" className="outline" onClick={()=>{setForgot(true);setMessage("")}}>Forgot Password?</button>}</div></div></main>;
 }
