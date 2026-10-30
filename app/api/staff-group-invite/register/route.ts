@@ -13,10 +13,18 @@ export async function POST(request:NextRequest){
   const hash=createHash("sha256").update(invite).digest("hex");
   const verify=await fetch(base+"/rest/v1/rpc/staff_group_invite_valid",{method:"POST",headers:{apikey:publicKey,"Content-Type":"application/json"},body:JSON.stringify({p_token_hash:hash}),cache:"no-store"});
   if(!verify.ok||(await verify.json())!==true)return NextResponse.json({error:"Invitation expired or invalid."},{status:403});
-  const signup=await fetch(base+"/auth/v1/signup",{method:"POST",headers:{apikey:publicKey,"Content-Type":"application/json"},body:JSON.stringify({email,password,data:{full_name:name,staff_positions:positions,group_invite_hash:hash}})});
+  // Group invites are validated above. Create confirmed accounts on the server so
+  // employees do not get stuck in a separate email-confirmation flow.
+  const serviceKey=process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if(!serviceKey)return NextResponse.json({error:"Registration is temporarily unavailable. Please contact your manager."},{status:503});
+  const signup=await fetch(base+"/auth/v1/admin/users",{method:"POST",headers:{apikey:serviceKey,Authorization:"Bearer "+serviceKey,"Content-Type":"application/json"},body:JSON.stringify({email,password,email_confirm:true,user_metadata:{full_name:name,staff_positions:positions,group_invite_hash:hash}})});
   const result=await signup.json();
-  if(!signup.ok||!result.user?.id)return NextResponse.json({error:"Unable to register. This email may already have an account."},{status:400});
-  const newAccount=Array.isArray(result.user.identities)?result.user.identities.length>0:!!result.user.created_at;
+  if(!signup.ok||!result.id){
+   const duplicate=signup.status===422||/already|registered|exists|duplicate/i.test(String(result.msg||result.message||result.error||""));
+   return NextResponse.json({error:duplicate?"An account already exists for this email. Please sign in or use Forgot Password instead of registering again.":"Unable to create your account. Please contact your manager.",code:duplicate?"account_exists":"signup_failed"},{status:duplicate?409:400});
+  }
+  const newAccount=true;
+  const userId=result.id;
   if(newAccount&&process.env.RESEND_API_KEY){
    try{
     const sent=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:"Bearer "+process.env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({
@@ -37,7 +45,7 @@ export async function POST(request:NextRequest){
       const subs=await fetch(base+"/rest/v1/staff_push_subscriptions?user_id=eq."+encodeURIComponent(ownerId)+"&select=subscription",{headers:{apikey:process.env.SUPABASE_SERVICE_ROLE_KEY,Authorization:"Bearer "+process.env.SUPABASE_SERVICE_ROLE_KEY},cache:"no-store"});
       if(subs.ok){
        webpush.setVapidDetails(process.env.VAPID_SUBJECT||"mailto:natebarry11@gmail.com",process.env.VAPID_PUBLIC_KEY,process.env.VAPID_PRIVATE_KEY);
-       const payload=JSON.stringify({title:"New Employee: "+name,body:name+" joined Roberto's Staff ("+positions.join(", ")+")",url:"/manager/employees",tag:"new-staff-"+result.user.id});
+       const payload=JSON.stringify({title:"New Employee: "+name,body:name+" joined Roberto's Staff ("+positions.join(", ")+")",url:"/manager/employees",tag:"new-staff-"+userId});
        await Promise.allSettled((await subs.json()).map((row:{subscription:webpush.PushSubscription})=>webpush.sendNotification(row.subscription,payload)));
       }
      }
