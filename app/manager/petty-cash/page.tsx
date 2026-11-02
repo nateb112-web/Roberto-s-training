@@ -39,7 +39,8 @@ export default function PettyCash(){
  }catch(e){setMessage(e instanceof Error?e.message:"Unable to save extra transaction.")}finally{setExtraBusy(false)}
  }
  const extraLedgerTotal=extraTransactions.reduce((sum,t)=>sum+(t.entry_type==="in"?1:-1)*Number(t.amount),0);
- const [weeklyDepositInput,setWeeklyDepositInput]=useState("");\n const [removedAmount,setRemovedAmount]=useState(""),[removedNote,setRemovedNote]=useState("");
+ const [weeklyDepositInput,setWeeklyDepositInput]=useState("");
+ const [removedAmount,setRemovedAmount]=useState(""),[removedNote,setRemovedNote]=useState("");
  const BASE=500;
  const weekStart=(d:string)=>{const dt=new Date(d+"T12:00:00Z");const dow=dt.getUTCDay();dt.setUTCDate(dt.getUTCDate()-((dow+6)%7));return dt.toISOString().slice(0,10)};
  const currentWeek=weekStart(date);
@@ -48,7 +49,8 @@ export default function PettyCash(){
  const isMonday=date===currentWeek;
  const depositsBefore=(d:string)=>eods.filter(e=>e.business_date>=weekStart(d)&&e.business_date<d&&["submitted","approved","finalized"].includes(e.status)&&e.actual_deposit!==null).reduce((n,e)=>n+Number(e.actual_deposit),0);
  const movementsThrough=(d:string)=>entries.filter(e=>e.business_date>=weekStart(d)&&e.business_date<=d).reduce((n,e)=>n+(e.entry_type==="in"?1:-1)*Number(e.amount),0);
- const resetDay=days.find(x=>x.business_date===date && (x.bill_counts as Record<string,unknown>|null)?.reset_baseline===true);\n const expectedBag=(d:string)=>resetDay&&d===date?BASE+entries.filter(e=>e.business_date===date).reduce((n,e)=>n+(e.entry_type==="in"?1:-1)*Number(e.amount),0):BASE+depositsBefore(d)+movementsThrough(d);
+ const resetDay=days.find(x=>x.business_date===date && (x.bill_counts as Record<string,unknown>|null)?.reset_baseline===true);
+ const expectedBag=(d:string)=>resetDay&&d===date?BASE+entries.filter(e=>e.business_date===date).reduce((n,e)=>n+(e.entry_type==="in"?1:-1)*Number(e.amount),0):BASE+depositsBefore(d)+movementsThrough(d);
  const priorWeekDeposit=Math.round((eods.filter(e=>e.business_date>=previousWeekStart&&e.business_date<=previousWeekEnd&&["submitted","approved","finalized"].includes(e.status)&&e.actual_deposit!==null).reduce((n,e)=>n+Number(e.actual_deposit),0)+entries.filter(e=>e.business_date>=previousWeekStart&&e.business_date<=previousWeekEnd&&e.reason!=="Weekly Deposit Removed").reduce((n,e)=>n+(e.entry_type==="in"?1:-1)*Number(e.amount),0))*100)/100;
  const mondayAlreadyRemoved=entries.some(e=>e.business_date===date&&e.reason==="Weekly Deposit Removed");
  async function removeWeeklyDeposits(){
