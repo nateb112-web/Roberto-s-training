@@ -24,7 +24,7 @@ export async function POST(request:NextRequest){
   const rate=await fetch(base+"catering_inquiry_rate_limits",{method:"POST",headers,body:JSON.stringify({fingerprint,bucket}),cache:"no-store"});
   if(rate.status===409)return reply("Please wait a few minutes before sending another inquiry.",429);
   if(!rate.ok)return reply("Unable to accept inquiry right now.",503);
-  const record={event_name:eventType+" inquiry — "+name,customer_name:name,customer_email:email,customer_phone:phone||null,event_type:"in_house",service_style:"buffet",event_date:date,start_time:time||null,guest_count:guests,location:"Tavern",status:"new_inquiry",deposit_amount:0,deposit_paid:false,contract_status:"not_sent",special_requests:notes||null,menu_notes:null,inquiry_source:source};
+  const record={event_name:eventType+" inquiry — "+name,customer_name:name,customer_email:email,customer_phone:phone||null,event_type:"in_house",service_style:"buffet",event_date:date,start_time:time||null,guest_count:guests,location:"To be determined",status:"new_inquiry",deposit_amount:0,deposit_paid:false,contract_status:"not_sent",special_requests:notes||null,menu_notes:"Service preference to be determined during inquiry review.",inquiry_source:source};
   const saved=await fetch(base+"catering_events",{method:"POST",headers:{...headers,Prefer:"return=minimal"},body:JSON.stringify(record),cache:"no-store"});
   if(!saved.ok){console.error("Inquiry insert failed",saved.status,(await saved.text()).slice(0,400));return reply("Could not submit your inquiry. Please try again.",503)}
   return NextResponse.json({ok:true});
