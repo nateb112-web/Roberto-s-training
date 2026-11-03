@@ -1,7 +1,8 @@
 "use client";
-import {useState} from "react";
+import {useEffect,useState} from "react";
 export default function InquiryPage(){
  const [source,setSource]=useState("robertos"),[busy,setBusy]=useState(false),[done,setDone]=useState(false),[error,setError]=useState("");
+ useEffect(()=>{const requested=new URLSearchParams(window.location.search).get("source");if(requested==="prime"||requested==="robertos")setSource(requested)},[]);
  const field:React.CSSProperties={width:"100%",boxSizing:"border-box",background:"#101d2c",border:"1px solid #41516a",borderRadius:9,padding:"12px 13px",color:"#f6f6f6",fontSize:16};
  const label:React.CSSProperties={display:"grid",gap:7,fontSize:14,fontWeight:650};
  async function submit(e:React.FormEvent<HTMLFormElement>){e.preventDefault();setBusy(true);setError("");const form=new FormData(e.currentTarget);const body=Object.fromEntries(form.entries());body.source=source;try{const r=await fetch("/api/catering/inquiry",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const data=await r.json();if(!r.ok)throw Error(data.error||"Could not submit inquiry.");setDone(true)}catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy(false)}}
