@@ -10,8 +10,9 @@ export async function GET(req:NextRequest){
  const user=await userRes.json();
  if(!user.email||!user.email_confirmed_at)return NextResponse.json({error:"Email verification required"},{status:403});
  const email=String(user.email).trim().toLowerCase();
- const res=await fetch(BASE+"/rest/v1/catering_events?select=id,event_name,event_date,start_time,end_time,guest_count,location,event_type,service_style,status,deposit_amount,deposit_paid,contract_status,customer_name,customer_email,inquiry_source&customer_portal_enabled=eq.true&customer_email=ilike."+encodeURIComponent(email)+"&order=event_date.desc",{headers:{apikey:service,Authorization:"Bearer "+service},cache:"no-store"});
+ const res=await fetch(BASE+"/rest/v1/catering_events?select=id,customer_portal_published_data,customer_portal_published_at&customer_portal_enabled=eq.true&customer_email=ilike."+encodeURIComponent(email)+"&order=event_date.desc",{headers:{apikey:service,Authorization:"Bearer "+service},cache:"no-store"});
  if(!res.ok)return NextResponse.json({error:"Unable to load your events"},{status:502});
- const events=await res.json();
+ const rows=await res.json();
+ const events=rows.filter((row:{customer_portal_published_data:Record<string,unknown>|null})=>row.customer_portal_published_data).map((row:{id:string;customer_portal_published_data:Record<string,unknown>})=>({id:row.id,...row.customer_portal_published_data}));
  return NextResponse.json({events},{headers:{"Cache-Control":"private, no-store"}});
 }
