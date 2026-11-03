@@ -10,7 +10,7 @@ export default function AuthGate({children}:{children:React.ReactNode}){
  useEffect(()=>{setMenuOpen(false)},[path]);
  useEffect(()=>{let cancelled=false;setAllowed(false);setError("");
  async function check(){
-  if(path==="/event-inquiry"||path==="/login"||path==="/set-password"||path==="/join"){if(!cancelled)setAllowed(true);return}
+  if((path==="/event-inquiry"||path==="/customer")||path==="/login"||path==="/set-password"||path==="/join"){if(!cancelled)setAllowed(true);return}
   try{
    const raw=sessionStorage.getItem("robertos_auth")||(localStorage.getItem("robertos_remember_device")==="yes"?localStorage.getItem("robertos_auth"):null);
    if(raw&&!sessionStorage.getItem("robertos_auth"))sessionStorage.setItem("robertos_auth",raw);
