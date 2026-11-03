@@ -10,7 +10,7 @@ export async function POST(request:NextRequest){
   if(body.website)return NextResponse.json({ok:true});
   const str=(v:unknown,max:number)=>typeof v==="string"?v.trim().slice(0,max):"";
   const source=str(body.source,30);
-  const name=str(body.name,120),email=str(body.email,180),phone=str(body.phone,40),date=str(body.date,10),time=str(body.time,5),guests=Number(body.guests),notes=str(body.notes,2000),eventType=str(body.eventType,60),service=str(body.service,60),location=str(body.location,60);
+  const name=str(body.name,120),email=str(body.email,180),phone=str(body.phone,40),date=str(body.date,10),time=str(body.time,5),guests=Number(body.guests),notes=str(body.notes,2000),eventType=str(body.eventType,60);
   if(!allowed.has(source)||name.length<2||!/^\S+@\S+\.\S+$/.test(email)||!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isInteger(guests)||guests<1||guests>2000||!eventType)return reply("Please complete all required fields.",400);
   const dateValue=new Date(date+"T12:00:00Z");
   if(Number.isNaN(dateValue.getTime())||dateValue.toISOString().slice(0,10)!==date||dateValue.getTime()<Date.now()-86400000)return reply("Choose a future event date.",400);
