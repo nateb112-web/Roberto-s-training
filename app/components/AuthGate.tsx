@@ -26,8 +26,8 @@ export default function AuthGate({children}:{children:React.ReactNode}){
    const profiles=await response.json();
    const profile=profiles[0];
    if(!profile)throw Error("no staff profile");
-   if(!cancelled)setCateringAccess(((profile.access_role==="admin"&&user.email?.toLowerCase()==="natebarry11@gmail.com")||(profile.access_role==="manager"&&user.id==="cc1292a7-81ea-46c4-adc3-9ebc38c868f7")));
-   if(path.startsWith("/catering")&&!((profile.access_role==="admin"&&user.email?.toLowerCase()==="natebarry11@gmail.com")||(profile.access_role==="manager"&&user.id==="cc1292a7-81ea-46c4-adc3-9ebc38c868f7"))){if(!cancelled){setError("Catering access denied");setAllowed(false)}return}
+   if(!cancelled)setCateringAccess((["admin","manager"].includes(profile.access_role)&&["natebarry11@gmail.com","christaf777@gmail.com"].includes((user.email||"").toLowerCase())));
+   if(path.startsWith("/catering")&&!(["admin","manager"].includes(profile.access_role)&&["natebarry11@gmail.com","christaf777@gmail.com"].includes((user.email||"").toLowerCase()))){if(!cancelled){setError("Catering access denied");setAllowed(false)}return}
    if((path.startsWith("/courses")||path.startsWith("/training"))&&profile.access_role==="staff"){if(!cancelled){setRole(profile.access_role);setAllowed(true)}return}
    if(path.startsWith("/manager")&&!["admin","manager"].includes(profile.access_role)){window.location.replace("/");return}
    if(path==="/"&&["admin","manager"].includes(profile.access_role)){window.location.replace("/manager");return}
