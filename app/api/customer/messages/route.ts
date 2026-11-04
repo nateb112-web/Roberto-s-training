@@ -16,7 +16,7 @@ async function authorize(req:NextRequest,eventId:string){
  if(!event)return null;
  const profileRes=await fetch(BASE+"/rest/v1/staff_profiles?user_id=eq."+encodeURIComponent(user.id)+"&select=access_role,display_name",{headers:h,cache:"no-store"});
  const profile=profileRes.ok?(await profileRes.json())[0]:null;
- const staff=Boolean(profile&&((profile.access_role==="admin"&&user.email?.toLowerCase()==="natebarry11@gmail.com")||(profile.access_role==="manager"&&user.id==="cc1292a7-81ea-46c4-adc3-9ebc38c868f7")));
+ const staff=Boolean(profile&&(["admin","manager"].includes(profile.access_role)&&["natebarry11@gmail.com","christaf777@gmail.com"].includes((user.email||"").toLowerCase())));
  const customer=Boolean(event.customer_portal_enabled&&event.customer_email&&event.customer_email.trim().toLowerCase()===String(user.email||"").trim().toLowerCase());
  if(!staff&&!customer)return null;
  return {h,staff,name:staff?(profile?.display_name||"Roberto’s Events"):"Customer"};
